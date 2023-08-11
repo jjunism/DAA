@@ -1,0 +1,72 @@
+/*
+Q) Given a two dimensional array, say nxn, write an algorithm to find the total number of paths that are possible to travel from the top-left cell to bottom right cell.  You are allowed to move only right or downwards. For Ex: if nxn is 2x2, then the number of possible path is only two as shown in figure below.
+Sample Input:
+n = 2
+Combo of output to be printed = 3
+Sample output:
+1 2 4
+1 3 4
+(Note: The combo of output to be printed refers the number of cells that your output should hold)
+For example:
+for n = 3; if output to be printed is 5 then the answers will be 
+1 2 3 6 9
+1 2 3 6 9
+and so on
+
+//ans
+#include<iostream>
+
+using namespace std;
+
+void calc(int *mat, int i, int j, int m, int n, int *path, int sz)
+{
+	if (i == m-1)
+	{
+		for (int k=j; k<n; k++)
+			path[sz + k - j] = *((mat+i*n)+k);
+		for (int l = 0; l < sz+n-j; l++)
+		    if (l!=sz+n-j-1)
+			    cout << path[l] << " ";
+			else cout << path[l];
+		cout << endl;
+		return;
+	}
+	if (j == n - 1)
+	{
+		for (int k = i; k < m; k++)
+			path[sz+k-i] = *((mat + k*n) + j);
+		for (int l = 0; l < sz + m - i; l++)
+		    if (l!=sz+m-i-1)
+			    cout << path[l] << " ";
+			else cout << path[l];
+		cout << endl;
+		return;
+	}
+	path[sz] = *((mat + i*n) + j);
+	calc(mat, i, j+1, m, n, path, sz + 1);
+	calc(mat, i+1, j, m, n, path, sz + 1);
+}
+
+void print(int *mat, int m, int n)
+{
+	int *path = new int[m+n];
+	calc(mat, 0, 0, m, n, path, 0);
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    int mat[n][n];
+    int combo;
+    cin >> combo;
+    int number =1;
+    for (int i=0;i<n;i++){
+        for (int j=0;j<n;j++){
+            mat[i][j] = number;
+            number++;
+        }
+    }
+	print(*mat, n, n);
+	return 0;
+}
