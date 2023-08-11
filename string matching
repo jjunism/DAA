@@ -1,0 +1,82 @@
+/*
+Q) Assume that you are developing a plagiarism identifier software which identifies whether the given pattern (P) exist in the given text (T) or not. To bypass your software detection, the user will prepare a modified text (M) from the actual text (A) in the following way:
+Between every character in text (A) they will insert the predecessor and successor characters of the current position unless and until the predecessor and successor characters are different and prepare the modified text (M) and that will be given to your software as text (T). If the predecessor and successor characters are the same then they will not insert any characters at that position.
+For Example:
+Actual Text (A): abccd
+Modified Text (M): aabbbccccdd
+Now your task is to handle this modified text and identify whether there exists any given pattern (P) as per the actual text.
+Prepare an efficient string-matching algorithm to identify the existence of any given pattern in the given text with the following conditions.
+
+Your program should not extract the actual text from the modified text in any form.
+You should not delete or add any character in the given text, and you should not make a duplicate copy of the given text.
+If there is the actual text then it will print “Exists” and if not then “Not Exists”
+Note: In test cases 1st line is the text and 2nd line is the pattern
+TestCase
+Input:
+aabbbcccaaabbbaaab
+bbaa
+Output:
+Exists
+
+*/
+
+//ans
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> compute_lps(const string& pattern) {
+    int m = pattern.size();
+    vector<int> lps(m, 0);
+    int length = 0;
+    int i = 1;
+    while (i < m) {
+        if (pattern[i] == pattern[length]) {
+            length++;
+            lps[i] = length;
+            i++;
+        } else {
+            if (length != 0) {
+                length = lps[length - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+string kmp_modified(const string& text, const string& pattern) {
+    int n = text.size();
+    int m = pattern.size();
+    vector<int> lps = compute_lps(pattern);
+    int i = 0, j = 0;
+    while (i < n) {
+        if (pattern[j] == text[i]) {
+            i++;
+            j++;
+            if (j == m) {
+                return "Exists";
+            }
+        } else {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+    return "Not Exists";
+}
+
+int main() {
+    string text, pattern;
+    getline(cin, text);
+    getline(cin, pattern);
+    
+    string result = kmp_modified(text, pattern);
+    cout << result << endl;
+    
+    return 0;
+}
