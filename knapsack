@@ -1,0 +1,59 @@
+/*Q) Given a set of N items each having price P with Quantity Q and the total capacity C of a Container, Your task is to find the maximal value of fractions of items that can fit into the Container.
+Sample Input: 
+50 // Capacity C
+3 //N items
+60, 20 //item 1
+100, 50 //item 2
+120, 30 //item 3
+Sample Output: 
+180
+*/ 
+
+// ans
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+struct Item {
+    int price, quantity;
+};
+
+bool cmp(Item a, Item b) {
+    return (double)a.price/a.quantity > (double)b.price/b.quantity;
+}
+
+void solve( float number, int place) {
+   cout << fixed;
+   cout << setprecision( place );
+   cout << number << endl;
+}
+
+int main() {
+    int c, n;
+    cin >> c >> n;
+
+    vector<Item> items(n);
+    for (int i=0;i<n; i++) {
+        cin >> items[i].price >> items[i].quantity;
+    }
+
+    sort(items.begin(), items.end(), cmp);
+
+    int capacity = 0;
+    double value = 0.0;
+    for (int i = 0; i < n; i++) {
+        if (capacity + items[i].quantity <= c) {
+            capacity += items[i].quantity;
+            value += items[i].price;
+        } else {
+            int remaining = c-capacity;
+            value += (double)remaining/items[i].quantity * items[i].price;
+            break;
+        }
+    }
+    solve(value,1);
+    return 0;
+}
