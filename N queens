@@ -1,0 +1,54 @@
+/* 
+Q) Implement Backtracking method to solve N-Queens Problem and print all the possible solutions.
+In input you will get the value of (N).
+And you are supposed to print the solutions in Depth First Search order.
+For Example:
+Input:
+4
+Output:
+2 4 1 3
+3 1 4 2
+*/
+
+//ans
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void nqueens(int n, vector<int>& cols, vector<vector<int>>& ans) {
+    if (cols.size() == n) {
+        ans.push_back(cols);
+        return;
+    }
+    for (int col = 0; col<n;col++) {
+        bool place = true;
+        int row = cols.size();
+        for (int i=0; i<row;i++) {
+            if (cols[i] == col || cols[i]-i == col-row || cols[i]+i == col+row){
+                place = false;
+                break;
+            }
+        }
+        if (place) {
+            cols.push_back(col);
+            nqueens(n,cols, ans);
+            cols.pop_back();
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<vector<int>> ans;
+    vector<int> cols;
+    nqueens(n,cols,ans);
+    for (int i=0;i<ans.size();i++) {
+        for (int j = 0; j < ans[i].size(); j++) {
+            if (j==ans[i].size()-1) cout << ans[i][j]+1;
+            else cout << ans[i][j]+1 << " ";
+        }
+        cout << "\n";
+    }
+    return 0;
+}
